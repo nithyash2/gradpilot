@@ -13,5 +13,11 @@ spring:
     enabled: true
     locations: classpath:db/migration
 
+gradpilot:
+  jwt:
+    # Local development default only. Set JWT_SECRET to a long random value in production.
+    secret: ${JWT_SECRET:local-dev-secret-change-me-before-deploying-0123456789}
+    ttl: ${JWT_TTL:7d}
+
 server:
   port: 8080
