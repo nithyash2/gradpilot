@@ -2,7 +2,7 @@
 
 A daily planner for graduates juggling a job hunt, casual shifts, study and life admin. One Today screen, trackers for anything you need to follow, and reminders that arrive on your phone.
 
-> Status: in development (Week 1 of 8). See the [roadmap](docs/ROADMAP.md).
+> Status: in development (Week 2 of 8 done). See the [roadmap](docs/ROADMAP.md).
 
 ## Why
 
@@ -40,6 +40,34 @@ gradpilot/
 ├── docker-compose.yml  Local PostgreSQL
 └── .github/workflows/  Continuous integration
 ```
+
+## API
+
+| Method | Path | Auth | Description |
+| --- | --- | --- | --- |
+| GET | `/api/health` | Public | Check the API is running |
+| POST | `/api/auth/signup` | Public | Create an account, returns a token |
+| POST | `/api/auth/login` | Public | Log in, returns a token |
+| GET | `/api/me` | Bearer token | The logged-in user's profile |
+
+Example:
+
+```bash
+curl -X POST http://localhost:8080/api/auth/signup \
+  -H "Content-Type: application/json" \
+  -d '{"email":"you@example.com","password":"at-least-8-chars","timezone":"Australia/Melbourne"}'
+```
+
+Errors come back as JSON [problem details](https://www.rfc-editor.org/rfc/rfc9457) with a `fields` map for validation errors.
+
+## Configuration
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `DB_URL` | `jdbc:postgresql://localhost:5432/gradpilot` | Database connection |
+| `DB_USERNAME` / `DB_PASSWORD` | `gradpilot` | Database login |
+| `JWT_SECRET` | Development value | Token signing key, at least 32 bytes. Always set in production |
+| `JWT_TTL` | `7d` | How long a login lasts |
 
 ## Run it locally
 

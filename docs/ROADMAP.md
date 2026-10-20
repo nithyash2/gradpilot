@@ -2,6 +2,8 @@
 
 Eight weeks to a live version 1. Each week ends with working code pushed to `main`.
 
+Progress: Weeks 1 and 2 done.
+
 ## Week 1: Set up
 - [x] Repository, README, licence, editor config
 - [x] Spring Boot skeleton with a health endpoint and test
@@ -9,9 +11,9 @@ Eight weeks to a live version 1. Each week ends with working code pushed to `mai
 - [x] GitHub Actions CI for the backend
 
 ## Week 2: Login
-- [ ] `users` table migration
-- [ ] Sign up and log in endpoints with JWT (Spring Security)
-- [ ] Integration tests with Testcontainers
+- [x] `users` table migration
+- [x] Sign up and log in endpoints with JWT (Spring Security)
+- [x] Integration tests with Testcontainers
 
 ## Week 3: Trackers backend
 - [ ] `trackers` and `items` tables (type-specific fields in JSONB)
