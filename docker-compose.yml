@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16
+    container_name: gradpilot-db
+    environment:
+      POSTGRES_DB: gradpilot
+      POSTGRES_USER: gradpilot
+      POSTGRES_PASSWORD: gradpilot
+    ports:
+      - "5432:5432"
+    volumes:
+      - gradpilot-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gradpilot -d gradpilot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  gradpilot-data:
