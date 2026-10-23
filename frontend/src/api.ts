@@ -4,6 +4,8 @@ import type {
   Item,
   ItemRequest,
   JobImportResult,
+  OutlookStatus,
+  OutlookSync,
   PushStatus,
   Template,
   Today,
@@ -126,6 +128,11 @@ export const api = {
   testPush: () => request<{ delivered: number }>('POST', '/api/push/test', {}),
 
   importJobEmail: (text: string) => request<JobImportResult>('POST', '/api/jobs/emails', { text }),
+
+  outlookStatus: () => request<OutlookStatus>('GET', '/api/outlook/status'),
+  outlookConnect: () => request<{ url: string }>('POST', '/api/outlook/connect', {}),
+  outlookSync: () => request<OutlookSync>('POST', '/api/outlook/sync', {}),
+  outlookDisconnect: () => request<void>('DELETE', '/api/outlook'),
 };
 
 /** Turns a saved item into an update request, applying changes on top. */

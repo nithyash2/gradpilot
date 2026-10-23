@@ -163,3 +163,21 @@ export interface JobImportResult {
   stage: string | null;
   previousStage: string | null;
 }
+
+export interface OutlookStatus {
+  available: boolean;
+  connected: boolean;
+  email: string | null;
+  needsReconnect: boolean;
+  connectedAt: string | null;
+  lastSyncedAt: string | null;
+  lastError: string | null;
+  importedCount: number;
+}
+
+export interface OutlookSync {
+  read: number;
+  created: number;
+  updated: number;
+  error: string | null;
+}

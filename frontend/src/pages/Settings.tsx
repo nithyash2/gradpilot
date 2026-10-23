@@ -10,7 +10,8 @@ import {
   runningAsInstalledApp,
 } from '../lib/push';
 import { toInputTime } from '../lib/time';
-import type { PushStatus } from '../types';
+import { connectMessage, syncMessage, timeAgo } from '../lib/outlook';
+import type { OutlookStatus, PushStatus } from '../types';
 import { errorMessage } from '../useAsync';
 
 function timezones(): string[] {
@@ -121,6 +122,107 @@ function Notifications() {
   );
 }
 
+function JobEmails() {
+  const [status, setStatus] = useState<OutlookStatus | null>(null);
+  const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(() =>
+    connectMessage(window.location.search),
+  );
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    api.outlookStatus().then(setStatus).catch(() => setStatus(null));
+    if (window.location.search.includes('outlook=')) {
+      // Keep the address tidy so a refresh does not show the message again
+      window.history.replaceState(null, '', window.location.pathname);
+    }
+  }, []);
+
+  async function run(action: () => Promise<string | void>) {
+    setBusy(true);
+    setMessage(null);
+    try {
+      const text = await action();
+      if (text) setMessage({ ok: true, text });
+      setStatus(await api.outlookStatus());
+    } catch (e) {
+      setMessage({ ok: false, text: errorMessage(e) });
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function connect() {
+    setBusy(true);
+    try {
+      const { url } = await api.outlookConnect();
+      window.location.assign(url);
+    } catch (e) {
+      setMessage({ ok: false, text: errorMessage(e) });
+      setBusy(false);
+    }
+  }
+
+  return (
+    <section className="panel" aria-labelledby="jobmail-title">
+      <h2 id="jobmail-title">Job emails</h2>
+      {!status ? (
+        <p className="muted small">Loading…</p>
+      ) : !status.available ? (
+        <p className="small muted">
+          Reading Outlook automatically is not set up on the server yet. You can still paste job emails on the
+          Trackers screen.
+        </p>
+      ) : !status.connected ? (
+        <>
+          <p className="small muted">
+            Connect Outlook and GradPilot reads your inbox every 15 minutes. Confirmations from SEEK, LinkedIn, Indeed
+            and careers sites are added to Job hunt, and interviews, assessments, offers and rejections move them
+            along. It only reads; it never sends or deletes email.
+          </p>
+          <button className="primary" disabled={busy} onClick={() => void connect()}>
+            Connect Outlook
+          </button>
+        </>
+      ) : (
+        <>
+          <p className="small">
+            Connected to <strong>{status.email ?? 'Outlook'}</strong>. Last checked {timeAgo(status.lastSyncedAt)}
+            {status.importedCount > 0 ? `, ${status.importedCount} job updates so far` : ''}.
+          </p>
+          {status.lastError && <p className="error">{status.lastError}</p>}
+          <div className="row">
+            {status.needsReconnect ? (
+              <button className="primary" disabled={busy} onClick={() => void connect()}>
+                Connect again
+              </button>
+            ) : (
+              <button disabled={busy} onClick={() => void run(async () => syncMessage(await api.outlookSync()))}>
+                {busy ? 'Checking…' : 'Check now'}
+              </button>
+            )}
+            <button
+              disabled={busy}
+              onClick={() =>
+                void run(async () => {
+                  await api.outlookDisconnect();
+                  return 'Outlook disconnected. Your applications stay in Job hunt.';
+                })
+              }
+            >
+              Disconnect
+            </button>
+          </div>
+        </>
+      )}
+      {message && (
+        <p className={message.ok ? 'success' : 'error'} role="status">
+          {message.text}
+        </p>
+      )}
+    </section>
+  );
+}
+
 export default function Settings() {
   const { user, setUser, logout } = useAuth();
   const [form, setForm] = useState({
@@ -161,6 +263,8 @@ export default function Settings() {
       <h1>Settings</h1>
 
       <Notifications />
+
+      <JobEmails />
 
       <form className="panel" onSubmit={save} aria-labelledby="profile-title">
         <h2 id="profile-title">Your day</h2>
