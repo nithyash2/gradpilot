@@ -3,6 +3,7 @@ import { travelMinutesOf } from '../lib/summary';
 import { formatDate, formatDuration, formatTime, minutesBetween, toInputTime } from '../lib/time';
 import type { ItemActions } from '../pages/TrackerPage';
 import type { Item, Tracker } from '../types';
+import RosterImport from './RosterImport';
 
 function leaveTime(start: string | null, travel: number): string {
   if (!start) return '';
@@ -69,6 +70,7 @@ export default function ScheduleView({
 
   return (
     <>
+      <RosterImport items={items} actions={actions} title={tracker.name === 'Work shifts' ? 'Shift' : tracker.name} />
       <form className="panel" onSubmit={add}>
         <h2>Add a shift</h2>
         <div className="row">
