@@ -34,8 +34,9 @@ class OutlookSecurityTest {
     void tamperedOrForeignTokensAreRejected() {
         TokenCipher cipher = new TokenCipher(JWT);
         String sealed = cipher.encrypt("refresh-token");
-        char last = sealed.charAt(sealed.length() - 2);
-        String tampered = sealed.substring(0, sealed.length() - 2) + (last == 'A' ? 'B' : 'A') + sealed.charAt(sealed.length() - 1);
+        byte[] bytes = java.util.Base64.getDecoder().decode(sealed.substring(3));
+        bytes[bytes.length / 2] ^= 1;
+        String tampered = "v1:" + java.util.Base64.getEncoder().encodeToString(bytes);
 
         assertThatThrownBy(() -> cipher.decrypt(tampered)).isInstanceOf(IllegalArgumentException.class);
         TokenCipher otherServer = new TokenCipher(
@@ -78,6 +79,6 @@ class OutlookSecurityTest {
         assertThat(verifier).hasSize(43).matches("[A-Za-z0-9_-]+");
         // RFC 7636 appendix B example
         assertThat(OAuthState.challenge("dBjftJeZ4CVP-mB92K27uhbUJU1p1r_wW1gFWFOEjXk"))
-                .isEqualTo("E9Melhoa2OwvFWkMrCRAOYjAGmOmuTYwgaCnoEXl_HQ");
+                .isEqualTo("E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM");
     }
 }
