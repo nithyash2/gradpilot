@@ -28,6 +28,9 @@ gradpilot:
     allow-insecure: false
   scheduler:
     enabled: ${SCHEDULER_ENABLED:true}
+  cors:
+    # Comma-separated web app addresses allowed to call the API
+    allowed-origins: ${CORS_ORIGINS:http://localhost:5173}
 
 server:
   port: 8080
