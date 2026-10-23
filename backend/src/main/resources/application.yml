@@ -18,6 +18,16 @@ gradpilot:
     # Local development default only. Set JWT_SECRET to a long random value in production.
     secret: ${JWT_SECRET:local-dev-secret-change-me-before-deploying-0123456789}
     ttl: ${JWT_TTL:7d}
+  push:
+    # Generate a pair with: npx web-push generate-vapid-keys
+    public-key: ${VAPID_PUBLIC_KEY:}
+    private-key: ${VAPID_PRIVATE_KEY:}
+    subject: ${VAPID_SUBJECT:mailto:admin@example.com}
+    # Push services the server is allowed to call (Apple, Google, Mozilla, Microsoft)
+    allowed-hosts: ${PUSH_ALLOWED_HOSTS:web.push.apple.com,*.push.apple.com,fcm.googleapis.com,updates.push.services.mozilla.com,*.push.services.mozilla.com,*.notify.windows.com}
+    allow-insecure: false
+  scheduler:
+    enabled: ${SCHEDULER_ENABLED:true}
 
 server:
   port: 8080
