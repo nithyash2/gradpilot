@@ -45,13 +45,18 @@ jobs:
           for f in target/surefire-reports/*.txt; do
             [ -f "$f" ] && grep -B1 -A6 -E "<<< (FAILURE|ERROR)" "$f" | head -30
           done > tests.txt 2>/dev/null || true
+          # Root causes from full stack traces
+          grep -h -oE "Caused by: [^&]{0,250}" target/surefire-reports/TEST-*.xml 2>/dev/null \
+            | sort | uniq -c | sort -rn | head -12 > causes.txt || true
 
           {
             echo "## Build errors"; echo '```'; cat errors.txt; echo '```'
+            echo "## Root causes"; echo '```'; cat causes.txt; echo '```'
             echo "## Failed tests"; echo '```'; cat tests.txt; echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
           encode() { sed ':a;N;$!ba;s/%/%25/g;s/\r/%0D/g;s/\n/%0A/g'; }
+          [ -s causes.txt ] && echo "::error title=Root causes::$(cat causes.txt | encode)"
           [ -s errors.txt ] && echo "::error title=Build errors::$(cut -c1-300 errors.txt | encode)"
           [ -s tests.txt ] && echo "::error title=Failed tests::$(cut -c1-300 tests.txt | head -60 | encode)"
           exit 0
