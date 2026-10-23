@@ -12,10 +12,10 @@ Allow about 30 minutes the first time. Do the steps in order, because each one n
 
 ## 1. Create the database (Supabase)
 
-1. Sign up at supabase.com and create a new project. Pick the **Sydney** region and save the database password somewhere safe.
+1. Sign up at supabase.com and create a new project. Pick the **Singapore** region (ap-southeast-1), the same region as the API on Render, and save the database password somewhere safe.
 2. Open **Connect** at the top of the project, and choose the **Session pooler** connection. Render can only reach this one.
 3. From that connection string, note three values:
-   - **DB_URL:** `jdbc:postgresql://<host>:5432/postgres?sslmode=require`, using the host from the string (for example `aws-0-ap-southeast-2.pooler.supabase.com`)
+   - **DB_URL:** `jdbc:postgresql://<host>:5432/postgres?sslmode=require`, using the host from the string (for example `aws-0-ap-southeast-1.pooler.supabase.com`)
    - **DB_USERNAME:** the user in the string, for example `postgres.abcdefghijkl`
    - **DB_PASSWORD:** the password you saved
 

@@ -13,7 +13,7 @@ services:
     branch: main
     envVars:
       # Supabase connection (Session pooler), e.g.
-      # jdbc:postgresql://aws-0-ap-southeast-2.pooler.supabase.com:5432/postgres?sslmode=require
+      # jdbc:postgresql://aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres?sslmode=require
       - key: DB_URL
         sync: false
       - key: DB_USERNAME
