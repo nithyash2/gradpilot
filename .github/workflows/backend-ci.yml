@@ -60,3 +60,12 @@ jobs:
           [ -s errors.txt ] && echo "::error title=Build errors::$(cut -c1-300 errors.txt | encode)"
           [ -s tests.txt ] && echo "::error title=Failed tests::$(cut -c1-300 tests.txt | head -60 | encode)"
           exit 0
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Build the production image
+        run: docker build -t gradpilot-backend backend

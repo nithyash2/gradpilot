@@ -33,4 +33,5 @@ gradpilot:
     allowed-origins: ${CORS_ORIGINS:http://localhost:5173}
 
 server:
-  port: 8080
+  # Hosts such as Render set PORT
+  port: ${PORT:8080}

@@ -1,0 +1,17 @@
+name: Keep API awake
+
+# Free Render services sleep after 15 minutes without traffic, which would
+# stop the once-a-minute reminder job. A light health check every 10 minutes
+# keeps it running. Set the repository variable API_URL to turn this on.
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    if: ${{ vars.API_URL != '' }}
+    steps:
+      - name: Call the health endpoint
+        run: curl --silent --show-error --fail --max-time 90 --retry 2 "${{ vars.API_URL }}/api/health"
