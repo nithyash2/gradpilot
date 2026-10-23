@@ -38,6 +38,13 @@ public class ApiExceptionHandler {
         return problem;
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    ProblemDetail notFound(NotFoundException e) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, e.getMessage());
+        problem.setTitle("Not found");
+        return problem;
+    }
+
     @ExceptionHandler(EmailAlreadyUsedException.class)
     ProblemDetail emailTaken(EmailAlreadyUsedException e) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.getMessage());
