@@ -1,6 +1,7 @@
 package com.gradpilot.notify;
 
 import java.time.Clock;
+import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gradpilot.push.PushMessage;
 import com.gradpilot.push.PushService;
 import com.gradpilot.push.PushSubscriptionRepository;
+import com.gradpilot.review.WeekReviewService;
 import com.gradpilot.today.TodayDtos.TodayResponse;
 import com.gradpilot.today.TodayService;
 import com.gradpilot.tracker.Item;
@@ -40,16 +42,19 @@ public class NotificationService {
     private final TodayService today;
     private final ItemRepository items;
     private final TrackerRepository trackers;
+    private final WeekReviewService reviews;
     private final Clock clock;
 
     public NotificationService(PushService push, PushSubscriptionRepository subscriptions, UserRepository users,
-                               TodayService today, ItemRepository items, TrackerRepository trackers, Clock clock) {
+                               TodayService today, ItemRepository items, TrackerRepository trackers,
+                               WeekReviewService reviews, Clock clock) {
         this.push = push;
         this.subscriptions = subscriptions;
         this.users = users;
         this.today = today;
         this.items = items;
         this.trackers = trackers;
+        this.reviews = reviews;
         this.clock = clock;
     }
 
@@ -77,8 +82,13 @@ public class NotificationService {
                 sent++;
             }
             if (isDue(time, user.getEveningTime(), user.getLastEveningSent(), date)) {
-                TodayResponse view = today.today(userId);
-                push.sendToUser(userId, DigestMessages.evening(user, view));
+                if (date.getDayOfWeek() == DayOfWeek.SUNDAY) {
+                    // Sunday evening looks back at the whole week instead
+                    push.sendToUser(userId, WeekReviewService.message(reviews.week(userId, date)));
+                } else {
+                    TodayResponse view = today.today(userId);
+                    push.sendToUser(userId, DigestMessages.evening(user, view));
+                }
                 user.setLastEveningSent(date);
                 sent++;
             }
