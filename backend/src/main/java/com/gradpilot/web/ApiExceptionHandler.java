@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.gradpilot.auth.EmailAlreadyUsedException;
 import com.gradpilot.auth.InvalidCredentialsException;
+import com.gradpilot.outlook.OutlookUnavailableException;
 import com.gradpilot.push.PushDisabledException;
 
 /**
@@ -50,6 +51,13 @@ public class ApiExceptionHandler {
     ProblemDetail pushDisabled(PushDisabledException e) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
         problem.setTitle("Notifications unavailable");
+        return problem;
+    }
+
+    @ExceptionHandler(OutlookUnavailableException.class)
+    ProblemDetail outlookUnavailable(OutlookUnavailableException e) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
+        problem.setTitle("Outlook unavailable");
         return problem;
     }
 

@@ -26,6 +26,14 @@ gradpilot:
     # Push services the server is allowed to call (Apple, Google, Mozilla, Microsoft)
     allowed-hosts: ${PUSH_ALLOWED_HOSTS:web.push.apple.com,*.push.apple.com,fcm.googleapis.com,updates.push.services.mozilla.com,*.push.services.mozilla.com,*.notify.windows.com}
     allow-insecure: false
+  outlook:
+    # From a Microsoft Entra app registration; Outlook stays off until these are set
+    client-id: ${OUTLOOK_CLIENT_ID:}
+    client-secret: ${OUTLOOK_CLIENT_SECRET:}
+    redirect-uri: ${OUTLOOK_REDIRECT_URI:}
+    tenant: ${OUTLOOK_TENANT:common}
+    # Where to send people after connecting; defaults to the first CORS origin
+    web-app-url: ${WEB_APP_URL:${CORS_ORIGINS:http://localhost:5173}}
   scheduler:
     enabled: ${SCHEDULER_ENABLED:true}
   cors:
