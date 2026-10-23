@@ -234,6 +234,10 @@ public class TrackerService {
         if (stages != null && !(stages instanceof List<?>)) {
             throw new IllegalArgumentException("settings.stages must be a list");
         }
+        Object username = tracker.getSettings().get("leetcodeUsername");
+        if (username != null && !(username instanceof String name && name.matches("[A-Za-z0-9_-]{0,40}"))) {
+            throw new IllegalArgumentException("settings.leetcodeUsername can only use letters, numbers, - and _");
+        }
         Object travel = tracker.getSettings().get(Tracker.SETTING_TRAVEL_MINUTES);
         if (travel != null && !(travel instanceof Number number && number.intValue() >= 0
                 && number.intValue() <= 600)) {

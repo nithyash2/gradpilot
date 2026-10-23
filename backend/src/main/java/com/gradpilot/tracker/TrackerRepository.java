@@ -13,4 +13,6 @@ public interface TrackerRepository extends JpaRepository<Tracker, UUID> {
     Optional<Tracker> findByIdAndUserId(UUID id, UUID userId);
 
     long countByUserId(UUID userId);
+
+    List<Tracker> findByTemplate(String template);
 }
