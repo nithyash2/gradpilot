@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.gradpilot.auth.EmailAlreadyUsedException;
 import com.gradpilot.auth.InvalidCredentialsException;
+import com.gradpilot.push.PushDisabledException;
 
 /**
  * Turns errors into consistent JSON responses (RFC 9457 problem details).
@@ -42,6 +43,13 @@ public class ApiExceptionHandler {
     ProblemDetail conflict(ConflictException e) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.getMessage());
         problem.setTitle("Conflict");
+        return problem;
+    }
+
+    @ExceptionHandler(PushDisabledException.class)
+    ProblemDetail pushDisabled(PushDisabledException e) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.SERVICE_UNAVAILABLE, e.getMessage());
+        problem.setTitle("Notifications unavailable");
         return problem;
     }
 

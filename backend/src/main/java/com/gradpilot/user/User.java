@@ -1,6 +1,7 @@
 package com.gradpilot.user;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Locale;
 import java.util.UUID;
@@ -53,6 +54,12 @@ public class User {
 
     @Column(name = "evening_time", nullable = false)
     private LocalTime eveningTime = DEFAULT_EVENING_TIME;
+
+    @Column(name = "last_morning_sent")
+    private LocalDate lastMorningSent;
+
+    @Column(name = "last_evening_sent")
+    private LocalDate lastEveningSent;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -152,6 +159,22 @@ public class User {
 
     public void setEveningTime(LocalTime eveningTime) {
         this.eveningTime = eveningTime;
+    }
+
+    public LocalDate getLastMorningSent() {
+        return lastMorningSent;
+    }
+
+    public void setLastMorningSent(LocalDate lastMorningSent) {
+        this.lastMorningSent = lastMorningSent;
+    }
+
+    public LocalDate getLastEveningSent() {
+        return lastEveningSent;
+    }
+
+    public void setLastEveningSent(LocalDate lastEveningSent) {
+        this.lastEveningSent = lastEveningSent;
     }
 
     public Instant getCreatedAt() {
