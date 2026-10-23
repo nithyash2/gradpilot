@@ -18,6 +18,7 @@ jobs:
     defaults:
       run:
         working-directory: backend
+        shell: bash
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -30,4 +31,27 @@ jobs:
           cache: maven
 
       - name: Build and run tests
-        run: mvn -B verify
+        run: |
+          set -o pipefail
+          mvn -B verify 2>&1 | tee build.log
+
+      - name: Summarise failures
+        if: failure()
+        run: |
+          # Compiler and Maven errors
+          grep -E "^\[ERROR\]" build.log | grep -vE "^\[ERROR\] *$|Help 1|re-run Maven|full stack|For more information" \
+            | head -40 > errors.txt || true
+          # Failed tests with the first lines of each failure
+          for f in target/surefire-reports/*.txt; do
+            [ -f "$f" ] && grep -B1 -A6 -E "<<< (FAILURE|ERROR)" "$f" | head -30
+          done > tests.txt 2>/dev/null || true
+
+          {
+            echo "## Build errors"; echo '```'; cat errors.txt; echo '```'
+            echo "## Failed tests"; echo '```'; cat tests.txt; echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          encode() { sed ':a;N;$!ba;s/%/%25/g;s/\r/%0D/g;s/\n/%0A/g'; }
+          [ -s errors.txt ] && echo "::error title=Build errors::$(cut -c1-300 errors.txt | encode)"
+          [ -s tests.txt ] && echo "::error title=Failed tests::$(cut -c1-300 tests.txt | head -60 | encode)"
+          exit 0
