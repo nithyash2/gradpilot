@@ -112,7 +112,9 @@ export default function TrackerPage() {
       view = <ProgressView items={items} actions={actions} />;
       break;
     case 'LOG':
-      view = <LogView tracker={tracker} items={items} actions={actions} />;
+      view = (
+        <LogView tracker={tracker} items={items} actions={actions} onSettings={updateSettings} onSynced={() => void reload()} />
+      );
       break;
     case 'COUNTDOWN':
       view = <CountdownView items={items} actions={actions} />;

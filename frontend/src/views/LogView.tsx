@@ -3,8 +3,21 @@ import { formatNumber } from '../lib/summary';
 import { formatDate } from '../lib/time';
 import type { ItemActions } from '../pages/TrackerPage';
 import type { Item, Tracker } from '../types';
+import LeetCodePanel from './LeetCodePanel';
 
-export default function LogView({ tracker, items, actions }: { tracker: Tracker; items: Item[]; actions: ItemActions }) {
+export default function LogView({
+  tracker,
+  items,
+  actions,
+  onSettings,
+  onSynced,
+}: {
+  tracker: Tracker;
+  items: Item[];
+  actions: ItemActions;
+  onSettings: (settings: Record<string, unknown>) => Promise<void>;
+  onSynced: () => void;
+}) {
   const unit = typeof tracker.settings.unit === 'string' ? tracker.settings.unit : '';
   const [date, setDate] = useState(actions.today);
   const [amount, setAmount] = useState('');
@@ -24,8 +37,9 @@ export default function LogView({ tracker, items, actions }: { tracker: Tracker;
 
   return (
     <>
+      {tracker.template === 'leetcode' && <LeetCodePanel tracker={tracker} onSettings={onSettings} onSynced={onSynced} />}
       <section className="panel">
-        <p className="muted small">Total so far</p>
+        <p className="muted small">{tracker.template === 'leetcode' ? 'Logged since you started tracking' : 'Total so far'}</p>
         <p className="days" style={{ textAlign: 'left' }}>
           {formatNumber(total)} <span className="small muted">{unit}</span>
         </p>

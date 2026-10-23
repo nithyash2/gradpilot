@@ -4,6 +4,7 @@ import type {
   Item,
   ItemRequest,
   JobImportResult,
+  LeetCodeSync,
   OutlookStatus,
   OutlookSync,
   PushStatus,
@@ -128,6 +129,8 @@ export const api = {
   testPush: () => request<{ delivered: number }>('POST', '/api/push/test', {}),
 
   importJobEmail: (text: string) => request<JobImportResult>('POST', '/api/jobs/emails', { text }),
+
+  leetcodeSync: (trackerId: string) => request<LeetCodeSync>('POST', `/api/trackers/${trackerId}/leetcode/sync`, {}),
 
   outlookStatus: () => request<OutlookStatus>('GET', '/api/outlook/status'),
   outlookConnect: () => request<{ url: string }>('POST', '/api/outlook/connect', {}),

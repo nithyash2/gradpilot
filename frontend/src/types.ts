@@ -181,3 +181,13 @@ export interface OutlookSync {
   updated: number;
   error: string | null;
 }
+
+export interface LeetCodeSync {
+  username: string | null;
+  easy: number | null;
+  medium: number | null;
+  hard: number | null;
+  total: number | null;
+  newToday: number;
+  error: string | null;
+}
