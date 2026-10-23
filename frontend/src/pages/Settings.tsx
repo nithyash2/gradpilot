@@ -223,6 +223,106 @@ function JobEmails() {
   );
 }
 
+function CalendarFeed() {
+  const [feed, setFeed] = useState<{ url?: string; webcal?: string } | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    api.calendar().then(setFeed).catch(() => setFeed({}));
+  }, []);
+
+  async function run(action: () => Promise<{ url?: string; webcal?: string }>, done: string) {
+    setBusy(true);
+    setMessage(null);
+    try {
+      setFeed(await action());
+      setMessage(done);
+    } catch (e) {
+      setMessage(errorMessage(e));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function copy(url: string) {
+    try {
+      await navigator.clipboard.writeText(url);
+      setMessage('Link copied.');
+    } catch {
+      setMessage('Press and hold the link to copy it.');
+    }
+  }
+
+  return (
+    <section className="panel" aria-labelledby="calendar-title">
+      <h2 id="calendar-title">Calendar</h2>
+      {!feed ? (
+        <p className="muted small">Loading…</p>
+      ) : !feed.url ? (
+        <>
+          <p className="small muted">
+            See your shifts (with a time-to-leave alert), countdown dates and dated tasks in Apple, Google or Outlook
+            Calendar. They update by themselves.
+          </p>
+          <button className="primary" disabled={busy} onClick={() => void run(() => api.newCalendar(), 'Calendar link ready.')}>
+            Add to my calendar
+          </button>
+        </>
+      ) : (
+        <>
+          <div className="row">
+            {feed.webcal && (
+              <a className="button primary" href={feed.webcal}>
+                Apple Calendar
+              </a>
+            )}
+            {feed.webcal && (
+              <a
+                className="button"
+                href={`https://calendar.google.com/calendar/r?cid=${encodeURIComponent(feed.webcal)}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Google Calendar
+              </a>
+            )}
+            <button onClick={() => void copy(feed.url!)}>Copy link</button>
+          </div>
+          <p className="small muted" style={{ wordBreak: 'break-all' }}>
+            {feed.url}
+          </p>
+          <p className="small muted">Keep this link private: anyone with it can see these dates.</p>
+          <div className="row">
+            <button
+              disabled={busy}
+              onClick={() => void run(() => api.newCalendar(), 'New link made. The old one no longer works.')}
+            >
+              Make a new link
+            </button>
+            <button
+              disabled={busy}
+              onClick={() =>
+                void run(async () => {
+                  await api.calendarOff();
+                  return {};
+                }, 'Calendar link turned off.')
+              }
+            >
+              Turn off
+            </button>
+          </div>
+        </>
+      )}
+      {message && (
+        <p className="small" role="status">
+          {message}
+        </p>
+      )}
+    </section>
+  );
+}
+
 export default function Settings() {
   const { user, setUser, logout } = useAuth();
   const [form, setForm] = useState({
@@ -265,6 +365,8 @@ export default function Settings() {
       <Notifications />
 
       <JobEmails />
+
+      <CalendarFeed />
 
       <form className="panel" onSubmit={save} aria-labelledby="profile-title">
         <h2 id="profile-title">Your day</h2>

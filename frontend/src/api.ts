@@ -132,6 +132,10 @@ export const api = {
 
   leetcodeSync: (trackerId: string) => request<LeetCodeSync>('POST', `/api/trackers/${trackerId}/leetcode/sync`, {}),
 
+  calendar: () => request<{ url?: string; webcal?: string }>('GET', '/api/calendar'),
+  newCalendar: () => request<{ url: string; webcal: string }>('POST', '/api/calendar', {}),
+  calendarOff: () => request<void>('DELETE', '/api/calendar'),
+
   outlookStatus: () => request<OutlookStatus>('GET', '/api/outlook/status'),
   outlookConnect: () => request<{ url: string }>('POST', '/api/outlook/connect', {}),
   outlookSync: () => request<OutlookSync>('POST', '/api/outlook/sync', {}),
