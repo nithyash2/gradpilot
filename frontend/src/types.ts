@@ -191,3 +191,16 @@ export interface LeetCodeSync {
   newToday: number;
   error: string | null;
 }
+
+export interface WeekReview {
+  start: string;
+  end: string;
+  days: { date: string; checkedIn: boolean; focus: string | null; focusDone: boolean }[];
+  focusDays: number;
+  streak: number;
+  jobs: { applied: number; assessments: number; interviews: number; offers: number; rejections: number; active: number };
+  leetcodeSolved: number;
+  shifts: { count: number; hours: number };
+  logs: { trackerId: string; name: string; amount: number; unit: string | null }[];
+  study: { trackerId: string; name: string; averageProgress: number | null }[];
+}

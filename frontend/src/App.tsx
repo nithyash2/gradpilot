@@ -2,6 +2,7 @@ import { Navigate, NavLink, Route, Routes } from 'react-router-dom';
 import { useAuth } from './auth';
 import Login from './pages/Login';
 import NewTracker from './pages/NewTracker';
+import Review from './pages/Review';
 import Settings from './pages/Settings';
 import TodayPage from './pages/Today';
 import TrackerPage from './pages/TrackerPage';
@@ -25,6 +26,12 @@ function TabBar() {
             <path d="M8 9h8M8 13h8M8 17h5" />
           </svg>
           Trackers
+        </NavLink>
+        <NavLink to="/review" className={({ isActive }) => (isActive ? 'active' : '')}>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />
+          </svg>
+          Week
         </NavLink>
         <NavLink to="/settings" className={({ isActive }) => (isActive ? 'active' : '')}>
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -64,6 +71,7 @@ export default function App() {
         <Route path="/trackers" element={<Trackers />} />
         <Route path="/trackers/new" element={<NewTracker />} />
         <Route path="/trackers/:id" element={<TrackerPage />} />
+        <Route path="/review" element={<Review />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

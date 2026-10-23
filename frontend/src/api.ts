@@ -14,6 +14,7 @@ import type {
   TrackerDetail,
   TrackerType,
   User,
+  WeekReview,
 } from './types';
 
 const BASE = (import.meta.env.VITE_API_URL as string | undefined)?.replace(/\/$/, '') ?? 'http://localhost:8080';
@@ -135,6 +136,8 @@ export const api = {
   calendar: () => request<{ url?: string; webcal?: string }>('GET', '/api/calendar'),
   newCalendar: () => request<{ url: string; webcal: string }>('POST', '/api/calendar', {}),
   calendarOff: () => request<void>('DELETE', '/api/calendar'),
+
+  weekReview: (end?: string) => request<WeekReview>('GET', `/api/review/week${end ? `?end=${end}` : ''}`),
 
   outlookStatus: () => request<OutlookStatus>('GET', '/api/outlook/status'),
   outlookConnect: () => request<{ url: string }>('POST', '/api/outlook/connect', {}),
