@@ -26,6 +26,7 @@ import org.springframework.test.context.DynamicPropertySource;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.gradpilot.ApiTestSupport;
+import com.gradpilot.security.TokenCipher;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 

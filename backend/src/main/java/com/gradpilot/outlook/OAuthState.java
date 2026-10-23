@@ -17,6 +17,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.stereotype.Component;
 
 import com.gradpilot.auth.JwtProperties;
+import com.gradpilot.security.TokenCipher;
 
 /**
  * The {@code state} value sent to Microsoft and back. It is signed, names the

@@ -12,6 +12,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 import com.gradpilot.auth.JwtProperties;
+import com.gradpilot.security.TokenCipher;
 
 class OutlookSecurityTest {
 

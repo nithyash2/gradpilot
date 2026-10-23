@@ -1,4 +1,4 @@
-package com.gradpilot.outlook;
+package com.gradpilot.security;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -16,8 +16,9 @@ import org.springframework.stereotype.Component;
 import com.gradpilot.auth.JwtProperties;
 
 /**
- * Encrypts mailbox tokens before they reach the database (AES-256-GCM), so a
- * leaked database backup does not give access to anyone's email. The key is
+ * Encrypts secrets before they reach the database (AES-256-GCM): mailbox
+ * tokens and calendar links. A leaked database backup then gives no access
+ * to anyone's email or calendar. The key is
  * derived from the server's signing secret with HMAC, so there is no extra
  * secret to manage.
  */
@@ -71,7 +72,7 @@ public class TokenCipher {
     }
 
     /** A 32-byte key for one purpose, derived from the server secret. */
-    static byte[] derive(String secret, String purpose) {
+    public static byte[] derive(String secret, String purpose) {
         try {
             Mac mac = Mac.getInstance("HmacSHA256");
             mac.init(new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
