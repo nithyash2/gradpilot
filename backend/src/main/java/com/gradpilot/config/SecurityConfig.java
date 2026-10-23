@@ -48,6 +48,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/health").permitAll()
                         // Microsoft redirects the browser here; a signed state identifies the person
                         .requestMatchers(HttpMethod.GET, "/api/outlook/callback").permitAll()
+                        // Calendar apps cannot log in; the secret in the address is the key
+                        .requestMatchers(HttpMethod.GET, "/api/calendar/*.ics").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/auth/signup", "/api/auth/login").permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()));
