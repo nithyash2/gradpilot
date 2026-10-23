@@ -23,6 +23,8 @@ import jakarta.persistence.Table;
 public class User {
 
     public static final String DEFAULT_TIMEZONE = "Australia/Melbourne";
+    public static final LocalTime DEFAULT_MORNING_TIME = LocalTime.of(7, 10);
+    public static final LocalTime DEFAULT_EVENING_TIME = LocalTime.of(21, 40);
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -45,6 +47,12 @@ public class User {
 
     @Column(name = "bed_time")
     private LocalTime bedTime;
+
+    @Column(name = "morning_time", nullable = false)
+    private LocalTime morningTime = DEFAULT_MORNING_TIME;
+
+    @Column(name = "evening_time", nullable = false)
+    private LocalTime eveningTime = DEFAULT_EVENING_TIME;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
@@ -128,6 +136,22 @@ public class User {
 
     public void setBedTime(LocalTime bedTime) {
         this.bedTime = bedTime;
+    }
+
+    public LocalTime getMorningTime() {
+        return morningTime;
+    }
+
+    public void setMorningTime(LocalTime morningTime) {
+        this.morningTime = morningTime;
+    }
+
+    public LocalTime getEveningTime() {
+        return eveningTime;
+    }
+
+    public void setEveningTime(LocalTime eveningTime) {
+        this.eveningTime = eveningTime;
     }
 
     public Instant getCreatedAt() {

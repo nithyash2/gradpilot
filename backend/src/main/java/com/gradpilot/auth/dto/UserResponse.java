@@ -12,7 +12,9 @@ public record UserResponse(
         String displayName,
         String timezone,
         LocalTime wakeTime,
-        LocalTime bedTime) {
+        LocalTime bedTime,
+        LocalTime morningTime,
+        LocalTime eveningTime) {
 
     public static UserResponse from(User user) {
         return new UserResponse(
@@ -21,6 +23,8 @@ public record UserResponse(
                 user.getDisplayName(),
                 user.getTimezone(),
                 user.getWakeTime(),
-                user.getBedTime());
+                user.getBedTime(),
+                user.getMorningTime(),
+                user.getEveningTime());
     }
 }

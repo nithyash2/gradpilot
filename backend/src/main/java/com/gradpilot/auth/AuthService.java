@@ -1,8 +1,5 @@
 package com.gradpilot.auth;
 
-import java.time.DateTimeException;
-import java.time.ZoneId;
-
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,6 +9,7 @@ import com.gradpilot.auth.dto.AuthResponse;
 import com.gradpilot.auth.dto.LoginRequest;
 import com.gradpilot.auth.dto.SignupRequest;
 import com.gradpilot.auth.dto.UserResponse;
+import com.gradpilot.user.Timezones;
 import com.gradpilot.user.User;
 import com.gradpilot.user.UserRepository;
 
@@ -37,7 +35,7 @@ public class AuthService {
         User user = new User(request.email(), passwordEncoder.encode(request.password()));
         user.setDisplayName(blankToNull(request.displayName()));
         if (request.timezone() != null && !request.timezone().isBlank()) {
-            user.setTimezone(validTimezone(request.timezone().trim()));
+            user.setTimezone(Timezones.valid(request.timezone()));
         }
 
         try {
@@ -62,14 +60,6 @@ public class AuthService {
     private AuthResponse respond(User user) {
         TokenService.IssuedToken token = tokens.issue(user);
         return new AuthResponse(token.value(), token.expiresAt(), UserResponse.from(user));
-    }
-
-    private static String validTimezone(String timezone) {
-        try {
-            return ZoneId.of(timezone).getId();
-        } catch (DateTimeException e) {
-            throw new IllegalArgumentException("Unknown timezone: " + timezone);
-        }
     }
 
     private static String blankToNull(String value) {
