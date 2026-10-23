@@ -3,6 +3,7 @@ import type {
   CheckIn,
   Item,
   ItemRequest,
+  JobImportResult,
   PushStatus,
   Template,
   Today,
@@ -123,6 +124,8 @@ export const api = {
   unsubscribe: (endpoint: string) =>
     request<void>('DELETE', `/api/push/subscriptions?endpoint=${encodeURIComponent(endpoint)}`),
   testPush: () => request<{ delivered: number }>('POST', '/api/push/test', {}),
+
+  importJobEmail: (text: string) => request<JobImportResult>('POST', '/api/jobs/emails', { text }),
 };
 
 /** Turns a saved item into an update request, applying changes on top. */

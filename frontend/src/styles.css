@@ -319,6 +319,11 @@ button.icon {
   font-size: var(--step--1);
 }
 
+.success {
+  color: var(--go);
+  font-size: var(--step--1);
+}
+
 /* ---- Lists ------------------------------------------------------------------ */
 
 .list {

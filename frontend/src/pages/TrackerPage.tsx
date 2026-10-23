@@ -106,7 +106,7 @@ export default function TrackerPage() {
       view = <ChecklistView items={items} actions={actions} />;
       break;
     case 'PIPELINE':
-      view = <PipelineView tracker={tracker} items={items} actions={actions} />;
+      view = <PipelineView tracker={tracker} items={items} actions={actions} onImported={() => void reload()} />;
       break;
     case 'PROGRESS':
       view = <ProgressView items={items} actions={actions} />;

@@ -140,3 +140,26 @@ export interface PushStatus {
   publicKey: string | null;
   devices: number;
 }
+
+export type JobEmailKind = 'APPLIED' | 'ASSESSMENT' | 'INTERVIEW' | 'OFFER' | 'REJECTED';
+
+export type JobImportOutcome =
+  | 'CREATED'
+  | 'UPDATED'
+  | 'UNCHANGED'
+  | 'DUPLICATE'
+  | 'NOT_ENOUGH_DETAIL'
+  | 'NOT_A_JOB_EMAIL';
+
+export interface JobImportResult {
+  outcome: JobImportOutcome;
+  kind: JobEmailKind | null;
+  company: string | null;
+  role: string | null;
+  source: string | null;
+  trackerId: string | null;
+  itemId: string | null;
+  title: string | null;
+  stage: string | null;
+  previousStage: string | null;
+}

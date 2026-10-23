@@ -4,6 +4,7 @@ import { useAuth } from '../auth';
 import { TYPE_LABELS, trackerHeadline } from '../lib/summary';
 import { todayIn } from '../lib/time';
 import { useAsync } from '../useAsync';
+import JobEmailImport from '../views/JobEmailImport';
 
 export default function Trackers() {
   const { user } = useAuth();
@@ -18,6 +19,8 @@ export default function Trackers() {
           + New tracker
         </Link>
       </div>
+
+      <JobEmailImport onImported={() => void reload()} />
 
       {error && (
         <div className="stack">

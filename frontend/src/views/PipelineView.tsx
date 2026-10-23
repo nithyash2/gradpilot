@@ -3,15 +3,18 @@ import { stagesOf } from '../lib/summary';
 import { formatDate } from '../lib/time';
 import type { ItemActions } from '../pages/TrackerPage';
 import type { Item, Tracker } from '../types';
+import JobEmailImport from './JobEmailImport';
 
 export default function PipelineView({
   tracker,
   items,
   actions,
+  onImported,
 }: {
   tracker: Tracker;
   items: Item[];
   actions: ItemActions;
+  onImported?: () => void;
 }) {
   const stages = stagesOf(tracker);
   const [title, setTitle] = useState('');
@@ -32,8 +35,11 @@ export default function PipelineView({
   const other = items.filter((i) => !i.stage || !stages.includes(i.stage));
   if (other.length > 0) groups.push({ stage: 'Other', items: other });
 
+  const isJobHunt = tracker.template === 'job-hunt' || stages.includes('Applied');
+
   return (
     <>
+      {isJobHunt && <JobEmailImport onImported={onImported} />}
       <form className="panel" onSubmit={add}>
         <h2>Add an application</h2>
         <input
@@ -87,10 +93,14 @@ export default function PipelineView({
                     ) : (
                       item.title
                     )}
-                    {item.itemDate && (
+                    {(item.itemDate || typeof item.fields.source === 'string') && (
                       <>
                         <br />
-                        <span className="small muted">{formatDate(item.itemDate)}</span>
+                        <span className="small muted">
+                          {[formatDate(item.itemDate), typeof item.fields.source === 'string' ? item.fields.source : null]
+                            .filter(Boolean)
+                            .join(' · ')}
+                        </span>
                       </>
                     )}
                   </span>
